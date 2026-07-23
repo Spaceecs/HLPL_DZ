@@ -15,6 +15,11 @@ import { CreateUsers1784826037058 } from './migrations/1784826037058-CreateUsers
 import { CreateTables1700000001234 } from './migrations/1700000001234-CreateTables';
 import { AddIsActiveToProducts1784814806891 } from './migrations/1784814806891-AddIsActiveToProducts';
 import { User } from './users/user.entity';
+import { OrdersModule } from './orders/orders.module';
+import { AddCategoryToProducts1710000000000 } from './migrations/1710000000000-AddCategoryToProducts';
+import { Order } from './orders/entities/order.entity';
+import { OrderItem } from './orders/entities/order-item.entity';
+import { CreateOrdersTable1784834763070 } from './migrations/1784834763070-CreateOrdersTable';
 
 @Module({
   imports: [
@@ -26,13 +31,15 @@ import { User } from './users/user.entity';
       username: process.env.POSTGRES_USER,
       password: process.env.POSTGRES_PASSWORD,
       database: process.env.POSTGRES_DB,
-      entities: [Category, Product, User],
+      entities: [Category, Product, User, Order, OrderItem],
       synchronize: false,
       migrationsRun: true,
       migrations: [
         CreateTables1700000001234,
         AddIsActiveToProducts1784814806891,
         CreateUsers1784826037058,
+        AddCategoryToProducts1710000000000,
+        CreateOrdersTable1784834763070,
       ],
     }),
 
@@ -58,6 +65,7 @@ import { User } from './users/user.entity';
     ProductsModule,
     AuthModule,
     UsersModule,
+    OrdersModule,
   ],
   controllers: [AppController],
   providers: [AppService],

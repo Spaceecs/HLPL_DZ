@@ -1,116 +1,143 @@
-## Student
+# MiniShop API
 
-- Name: Боцяновський Олександр Олександрович
-- Group: 232/2 он
+REST API інтернет-магазину на **NestJS + PostgreSQL + Redis**.
 
-## Практичне заняття №7 — Redis + Pagination + Filtering
+## Студент
 
-### Структура репозиторію
+|            |                                      |
+| ---------- | ------------------------------------ |
+| **ПІБ**    | Боцяновський Олександр Олександрович |
+| **Група**  | 232/2 он                             |
+| **Проєкт** | MiniShop API — фінальний проєкт      |
 
-```
-.
-├── src/
-│   ├── auth/ ...
-│   ├── users/ ...
-│   ├── categories/ ...
-│   ├── products/ ...
-│   ├── common/
-│   │   ├── enums/
-│   │   │   └── role.enum.ts
-│   │   ├── guards/
-│   │   │   ├── jwt-auth.guard.ts
-│   │   │   └── roles.guard.ts
-│   │   ├── decorators/
-│   │   │   ├── current-user.decorator.ts
-│   │   │   └── roles.decorator.ts
-│   │   ├── interceptors/
-│   │   │   ├── logging.interceptor.ts
-│   │   │   └── transform.interceptor.ts
-│   │   ├── filters/
-│   │   │   └── http-exception.filter.ts
-│   │   └── pipes/
-│   │   	└── trim.pipe.ts
-│   ├── migrations/
-│   ├── main.ts
-│   └── app.module.ts
-├── swagger-screenshot.png
-├── Dockerfile
-├── docker-compose.yml
-└── README.md
-```
+---
 
-### Запуск проекту
+## Технології
+
+- **NestJS** + TypeScript
+- **PostgreSQL** + TypeORM (міграції, QueryBuilder)
+- **Redis** — кешування з інвалідацією
+- **JWT** автентифікація + **RBAC** авторизація
+- **class-validator** + **class-transformer**
+- **Swagger / OpenAPI**
+
+---
+
+## Запуск проєкту
 
 ```bash
 cp .env.example .env
 docker compose up --build
+docker compose run --rm app npm run seed
 ```
 
-### Swagger UI
+Після запуску Swagger UI буде доступний за адресою:
 
+```
 http://localhost:3000/api/docs
-
-![Swagger](swagger-screenshot.png)
-
-## Запуск проекту
-
-```bash
-cp .env.example .env   # налаштувати значення
-docker compose up --build
 ```
 
-## Перевірка сервісів
+---
 
-```text
-NAME                 IMAGE                COMMAND                  SERVICE    CREATED         STATUS                   PORTS
-hlpl_dz-app-1        hlpl_dz-app          "docker-entrypoint.s…"   app        9 minutes ago   Up 9 minutes             0.0.0.0:3000->3000/tcp, [::]:3000->3000/tcp
-hlpl_dz-postgres-1   postgres:16-alpine   "docker-entrypoint.s…"   postgres   9 minutes ago   Up 9 minutes (healthy)   0.0.0.0:5432->5432/tcp, [::]:5432->5432/tcp
-hlpl_dz-redis-1      redis:7-alpine       "docker-entrypoint.s…"   redis      9 minutes ago   Up 9 minutes (healthy)   0.0.0.0:6379->6379/tcp, [::]:6379->6379/tcp
+## API Endpoints
+
+### Auth
+
+| Method | URL              | Auth | Опис        |
+| ------ | ---------------- | ---- | ----------- |
+| POST   | `/auth/register` | –    | Реєстрація  |
+| POST   | `/auth/login`    | –    | Логін → JWT |
+
+### Categories
+
+| Method | URL                   | Auth  | Опис           |
+| ------ | --------------------- | ----- | -------------- |
+| GET    | `/api/categories`     | –     | Список         |
+| GET    | `/api/categories/:id` | –     | Одна категорія |
+| POST   | `/api/categories`     | admin | Створити       |
+| PATCH  | `/api/categories/:id` | admin | Оновити        |
+| DELETE | `/api/categories/:id` | admin | Видалити       |
+
+### Products
+
+| Method | URL                 | Auth  | Опис                         |
+| ------ | ------------------- | ----- | ---------------------------- |
+| GET    | `/api/products`     | –     | Список + pagination + filter |
+| GET    | `/api/products/:id` | –     | Один продукт                 |
+| POST   | `/api/products`     | admin | Створити                     |
+| PATCH  | `/api/products/:id` | admin | Оновити                      |
+| DELETE | `/api/products/:id` | admin | Видалити                     |
+
+### Orders
+
+| Method | URL                      | Auth  | Опис                         |
+| ------ | ------------------------ | ----- | ---------------------------- |
+| POST   | `/api/orders`            | user  | Створити замовлення          |
+| GET    | `/api/orders`            | user  | Мої замовлення / всі (admin) |
+| GET    | `/api/orders/:id`        | user  | Одне замовлення (ownership)  |
+| PATCH  | `/api/orders/:id/status` | admin | Змінити статус               |
+| DELETE | `/api/orders/:id`        | admin | Видалити                     |
+
+---
+
+## Приклади тестових запитів
+
+### Створення замовлення — успіх (201)
+
+```json
+{
+  "data": {
+    "id": 1,
+    "userId": 2,
+    "status": "pending",
+    "totalPrice": "135.00",
+    "items": [
+      { "productId": 61, "quantity": 2, "price": "45.00" },
+      { "productId": 58, "quantity": 1, "price": "39.00" }
+    ],
+    "createdAt": "2026-07-23T19:22:32.000Z"
+  },
+  "statusCode": 201,
+  "timestamp": "2026-07-23T19:22:32.880Z"
+}
 ```
 
-## Перевірка PostgreSQL
+### Перевірка ownership — заборонено (403)
 
-```text
-                                                      List of databases
-   Name    |  Owner   | Encoding | Locale Provider |  Collate   |   Ctype    | ICU Locale | ICU Rules |   Access privileges
------------+----------+----------+-----------------+------------+------------+------------+-----------+-----------------------
- nestdb    | nestuser | UTF8     | libc            | en_US.utf8 | en_US.utf8 |            |           |
- postgres  | nestuser | UTF8     | libc            | en_US.utf8 | en_US.utf8 |            |           |
- template0 | nestuser | UTF8     | libc            | en_US.utf8 | en_US.utf8 |            |           | =c/nestuser          +
-           |          |          |                 |            |            |            |           | nestuser=CTc/nestuser
- template1 | nestuser | UTF8     | libc            | en_US.utf8 | en_US.utf8 |            |           | =c/nestuser          +
-           |          |          |                 |            |            |            |           | nestuser=CTc/nestuser
-(4 rows)
-
+```json
+{
+  "error": {
+    "code": 403,
+    "message": "Forbidden resource",
+    "traceId": "c7f99269-0a86-4f5c-9fc7-c7b60364982b"
+  },
+  "timestamp": "2026-07-23T19:25:10.120Z"
+}
 ```
 
-## Перевірка Redis
+### Зміна статусу замовлення (200)
 
-```text
-PONG
+```json
+{
+  "data": {
+    "id": 1,
+    "status": "processing",
+    "updatedAt": "2026-07-23T19:28:40.500Z"
+  },
+  "statusCode": 200,
+  "timestamp": "2026-07-23T19:28:40.550Z"
+}
 ```
 
-## Перевірка застосунку
+### Недостатньо товару на складі (400)
 
-```text
-Hello World!%
-```
-
-## Логи NestJS (фрагмент)
-
-```text
-[9:46:50 AM] Starting compilation in watch mode...
-app-1  |
-app-1  | [9:46:52 AM] Found 0 errors. Watching for file changes.
-app-1  |
-app-1  | [Nest] 29  - 06/02/2026, 9:46:53 AM     LOG [NestFactory] Starting Nest application...
-app-1  | [Nest] 29  - 06/02/2026, 9:46:53 AM     LOG [InstanceLoader] TypeOrmModule dependencies initialized +52ms
-app-1  | [Nest] 29  - 06/02/2026, 9:46:53 AM     LOG [InstanceLoader] ConfigHostModule dependencies initialized +0ms
-app-1  | [Nest] 29  - 06/02/2026, 9:46:53 AM     LOG [InstanceLoader] AppModule dependencies initialized +0ms
-app-1  | [Nest] 29  - 06/02/2026, 9:46:53 AM     LOG [InstanceLoader] ConfigModule dependencies initialized +1ms
-app-1  | [Nest] 29  - 06/02/2026, 9:46:53 AM     LOG [InstanceLoader] CacheModule dependencies initialized +6ms
-app-1  | [Nest] 29  - 06/02/2026, 9:46:53 AM     LOG [InstanceLoader] TypeOrmCoreModule dependencies initialized +38ms
-app-1  | [Nest] 29  - 06/02/2026, 9:46:53 AM     LOG [RoutesResolver] AppController {/}: +4ms
-app-1  | [Nest] 29  - 06/02/2026, 9:46:53 AM     LOG [RouterExplorer] Mapped {/, GET} route +3ms
-app-1  | [Nest] 29  - 06/02/2026, 9:46:53 AM     LOG [NestApplication] Nest application successfully started +2ms
+```json
+{
+  "error": {
+    "code": 400,
+    "message": "Insufficient stock for \"Blocked Product\": available 0, requested 2",
+    "traceId": "b65778c8-dfca-4a24-a10f-fbafe8f83c58"
+  },
+  "timestamp": "2026-07-23T19:17:10.880Z"
+}
 ```
