@@ -3,7 +3,7 @@
 - Name: Боцяновський Олександр Олександрович
 - Group: 232/2 он
 
-## Практичне заняття №6 — Interceptors + Exception Filters + Swagger
+## Практичне заняття №7 — Redis + Pagination + Filtering
 
 ### Структура репозиторію
 

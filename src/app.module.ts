@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { CacheModule } from '@nestjs/cache-manager';
 import { redisStore } from 'cache-manager-redis-yet';
@@ -38,15 +38,20 @@ import { User } from './users/user.entity';
 
     CacheModule.registerAsync({
       isGlobal: true,
-      useFactory: async () => ({
-        store: await redisStore({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: async (configService: ConfigService) => {
+        const store = await redisStore({
           socket: {
-            host: process.env.REDIS_HOST,
-            port: parseInt(process.env.REDIS_PORT || '6379', 10),
+            host: configService.get<string>('REDIS_HOST', 'redis'),
+            port: configService.get<number>('REDIS_PORT', 6379),
           },
-        }),
-        ttl: 60 * 1000, // 60 секунд у мілісекундах
-      }),
+        });
+        return {
+          store: () => store,
+          ttl: 60 * 1000, // 60 секунд
+        };
+      },
     }),
 
     CategoriesModule,
