@@ -9,6 +9,7 @@ import { Category } from './categories/category.entity';
 import { Product } from './products/product.entity';
 import { CreateTables1700000001234 } from './migrations/1700000001234-CreateTables';
 import { AddIsActiveToProducts1784814806891 } from './migrations/1784814806891-AddIsActiveToProducts';
+import { CategoriesModule } from './categories/categories.module';
 
 @Module({
   imports: [
@@ -41,6 +42,8 @@ import { AddIsActiveToProducts1784814806891 } from './migrations/1784814806891-A
         ttl: 60 * 1000, // 60 секунд у мілісекундах
       }),
     }),
+
+    CategoriesModule,
   ],
   controllers: [AppController],
   providers: [AppService],
