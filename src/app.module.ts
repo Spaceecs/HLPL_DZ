@@ -7,6 +7,8 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { Category } from './categories/category.entity';
 import { Product } from './products/product.entity';
+import { CreateTables1700000001234 } from './migrations/1700000001234-CreateTables';
+import { AddIsActiveToProducts1784814806891 } from './migrations/1784814806891-AddIsActiveToProducts';
 
 @Module({
   imports: [
@@ -21,7 +23,10 @@ import { Product } from './products/product.entity';
       entities: [Category, Product],
       synchronize: false,
       migrationsRun: true,
-      migrations: [],
+      migrations: [
+        CreateTables1700000001234,
+        AddIsActiveToProducts1784814806891,
+      ],
     }),
 
     CacheModule.registerAsync({

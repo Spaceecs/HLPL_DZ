@@ -35,4 +35,7 @@ export class Product {
 
   @UpdateDateColumn()
   updatedAt: Date;
+
+  @Column({ type: 'boolean', default: true })
+  isActive: boolean;
 }
