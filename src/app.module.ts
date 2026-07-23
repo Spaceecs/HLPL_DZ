@@ -10,6 +10,7 @@ import { Product } from './products/product.entity';
 import { CreateTables1700000001234 } from './migrations/1700000001234-CreateTables';
 import { AddIsActiveToProducts1784814806891 } from './migrations/1784814806891-AddIsActiveToProducts';
 import { CategoriesModule } from './categories/categories.module';
+import { ProductsModule } from './products/products.module';
 
 @Module({
   imports: [
@@ -44,6 +45,8 @@ import { CategoriesModule } from './categories/categories.module';
     }),
 
     CategoriesModule,
+
+    ProductsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
