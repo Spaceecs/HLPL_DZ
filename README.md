@@ -10,25 +10,30 @@
 ```
 .
 ├── src/
-│   ├── categories/
+│   ├── auth/
 │   │   ├── dto/
-│   │   │   ├── create-category.dto.ts
-│   │   │   └── update-category.dto.ts
-│   │   ├── category.entity.ts
-│   │   ├── categories.module.ts
-│   │   ├── categories.service.ts
-│   │   └── categories.controller.ts
-│   ├── products/
-│   │   ├── dto/
-│   │   │   ├── create-product.dto.ts
-│   │   │   └── update-product.dto.ts
-│   │   ├── product.entity.ts
-│   │   ├── products.module.ts
-│   │   ├── products.service.ts
-│   │   └── products.controller.ts
+│   │   │   ├── register.dto.ts
+│   │   │   └── login.dto.ts
+│   │   ├── auth.module.ts
+│   │   ├── auth.service.ts
+│   │   └── auth.controller.ts
+│   ├── users/
+│   │   ├── user.entity.ts
+│   │   ├── users.module.ts
+│   │   └── users.service.ts
 │   ├── common/
+│   │   ├── enums/
+│   │   │   └── role.enum.ts
+│   │   ├── guards/
+│   │   │   ├── jwt-auth.guard.ts
+│   │   │   └── roles.guard.ts
+│   │   ├── decorators/
+│   │   │   ├── current-user.decorator.ts
+│   │   │   └── roles.decorator.ts
 │   │   └── pipes/
 │   │   	└── trim.pipe.ts
+│   ├── categories/ ...
+│   ├── products/ ...
 │   ├── migrations/
 │   ├── data-source.ts
 │   ├── main.ts

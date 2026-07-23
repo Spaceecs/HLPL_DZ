@@ -7,10 +7,14 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { Category } from './categories/category.entity';
 import { Product } from './products/product.entity';
-import { CreateTables1700000001234 } from './migrations/1700000001234-CreateTables';
-import { AddIsActiveToProducts1784814806891 } from './migrations/1784814806891-AddIsActiveToProducts';
 import { CategoriesModule } from './categories/categories.module';
 import { ProductsModule } from './products/products.module';
+import { AuthModule } from './auth/auth.module';
+import { UsersModule } from './users/users.module';
+import { CreateUsers1784826037058 } from './migrations/1784826037058-CreateUsers';
+import { CreateTables1700000001234 } from './migrations/1700000001234-CreateTables';
+import { AddIsActiveToProducts1784814806891 } from './migrations/1784814806891-AddIsActiveToProducts';
+import { User } from './users/user.entity';
 
 @Module({
   imports: [
@@ -22,12 +26,13 @@ import { ProductsModule } from './products/products.module';
       username: process.env.POSTGRES_USER,
       password: process.env.POSTGRES_PASSWORD,
       database: process.env.POSTGRES_DB,
-      entities: [Category, Product],
+      entities: [Category, Product, User],
       synchronize: false,
       migrationsRun: true,
       migrations: [
         CreateTables1700000001234,
         AddIsActiveToProducts1784814806891,
+        CreateUsers1784826037058,
       ],
     }),
 
@@ -45,8 +50,9 @@ import { ProductsModule } from './products/products.module';
     }),
 
     CategoriesModule,
-
     ProductsModule,
+    AuthModule,
+    UsersModule,
   ],
   controllers: [AppController],
   providers: [AppService],
