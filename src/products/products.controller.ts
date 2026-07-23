@@ -8,6 +8,8 @@ import {
   Body,
   ParseIntPipe,
   UseGuards,
+  Query,
+  UseInterceptors,
 } from '@nestjs/common';
 import { ProductsService } from './products.service';
 import { CreateProductDto } from './dto/create-product.dto';
@@ -22,6 +24,8 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
+import { ProductQueryDto } from './dto/product-query.dto';
+import { CacheInterceptor } from '@nestjs/cache-manager';
 
 @ApiTags('Products')
 @Controller('api/products')
@@ -30,14 +34,16 @@ export class ProductsController {
 
   // Публічні ендпоінти — без Guard
   @Get()
+  @UseInterceptors(CacheInterceptor)
   @ApiOperation({
-    summary: 'Отримати всі продукти',
+    summary: 'Отримати продукти з пагінацією',
     description:
-      'Повертає список усіх продуктів з вкладеними категоріями. Публічний ендпоінт.',
+      'Повертає список продуктів з мета-інформацією. ' +
+      'Підтримує пагінацію, сортування, фільтрацію ' +
+      'та пошук.',
   })
-  @ApiResponse({ status: 200, description: 'Список продуктів' })
-  findAll() {
-    return this.productsService.findAll();
+  findAll(@Query() query: ProductQueryDto) {
+    return this.productsService.findAll(query);
   }
 
   @Get(':id')
