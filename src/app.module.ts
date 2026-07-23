@@ -5,6 +5,8 @@ import { CacheModule } from '@nestjs/cache-manager';
 import { redisStore } from 'cache-manager-redis-yet';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { Category } from './categories/category.entity';
+import { Product } from './products/product.entity';
 
 @Module({
   imports: [
@@ -16,7 +18,7 @@ import { AppService } from './app.service';
       username: process.env.POSTGRES_USER,
       password: process.env.POSTGRES_PASSWORD,
       database: process.env.POSTGRES_DB,
-      entities: [],
+      entities: [Category, Product],
       synchronize: false,
       migrationsRun: true,
       migrations: [],
