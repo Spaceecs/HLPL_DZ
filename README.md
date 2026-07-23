@@ -3,24 +3,17 @@
 - Name: Боцяновський Олександр Олександрович
 - Group: 232/2 он
 
-## Практичне заняття №2 — NestJS + PostgreSQL + Redis
+## Практичне заняття №6 — Interceptors + Exception Filters + Swagger
 
 ### Структура репозиторію
 
 ```
 .
 ├── src/
-│   ├── auth/
-│   │   ├── dto/
-│   │   │   ├── register.dto.ts
-│   │   │   └── login.dto.ts
-│   │   ├── auth.module.ts
-│   │   ├── auth.service.ts
-│   │   └── auth.controller.ts
-│   ├── users/
-│   │   ├── user.entity.ts
-│   │   ├── users.module.ts
-│   │   └── users.service.ts
+│   ├── auth/ ...
+│   ├── users/ ...
+│   ├── categories/ ...
+│   ├── products/ ...
 │   ├── common/
 │   │   ├── enums/
 │   │   │   └── role.enum.ts
@@ -30,18 +23,34 @@
 │   │   ├── decorators/
 │   │   │   ├── current-user.decorator.ts
 │   │   │   └── roles.decorator.ts
+│   │   ├── interceptors/
+│   │   │   ├── logging.interceptor.ts
+│   │   │   └── transform.interceptor.ts
+│   │   ├── filters/
+│   │   │   └── http-exception.filter.ts
 │   │   └── pipes/
 │   │   	└── trim.pipe.ts
-│   ├── categories/ ...
-│   ├── products/ ...
 │   ├── migrations/
-│   ├── data-source.ts
 │   ├── main.ts
 │   └── app.module.ts
+├── swagger-screenshot.png
 ├── Dockerfile
 ├── docker-compose.yml
 └── README.md
 ```
+
+### Запуск проекту
+
+```bash
+cp .env.example .env
+docker compose up --build
+```
+
+### Swagger UI
+
+http://localhost:3000/api/docs
+
+![Swagger](swagger-screenshot.png)
 
 ## Запуск проекту
 
